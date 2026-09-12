@@ -9,6 +9,9 @@ const { errorMonitor } = require("events");
 if (!fs.existsSync("uploads")) {
     fs.mkdirSync("uploads");
 }
+if (!fs.existsSync("data.json")) {
+    fs.writeFileSync("data.json", "[]");
+}
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
