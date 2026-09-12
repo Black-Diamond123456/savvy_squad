@@ -42,7 +42,7 @@ async function sendMemberCard(entry) {
     let cardData = fs.readFileSync(imagePath);
     let base64Card = cardData.toString("base64");
 
-    await fetch("https://api.sendgrid.com/v3/mail/send", {
+    let response = await fetch("https://api.sendgrid.com/v3/mail/send", {
         method: "POST",
         headers: {
             "accept": "application/json",
@@ -62,6 +62,8 @@ async function sendMemberCard(entry) {
         })
     });
 }
+let result = await response.json();
+console.log("Email sent", result);
 app.use(express.static(__dirname));
 app.use(express.json());
 
