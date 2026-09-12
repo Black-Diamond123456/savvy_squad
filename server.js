@@ -61,9 +61,10 @@ async function sendMemberCard(entry) {
             ]
         })
     });
+
+    let result = await response.json();
+    console.log("Email sent", result);
 }
-let result = await response.json();
-console.log("Email sent", result);
 app.use(express.static(__dirname));
 app.use(express.json());
 
