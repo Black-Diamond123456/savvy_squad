@@ -6,13 +6,16 @@ const app = express();
 const nodeHtmlToImage = require("node-html-to-image");
 const nodemailer = require("nodemailer");
 const { errorMonitor } = require("events");
+if (!fs.existsSync("uploads")) {
+    fs.mkdirSync("uploads");
+}
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
     auth: {
-        user: "osondus444@gmail.com",
-        pass: "ouwxhjvfzoofvlxa"
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 async function sendMemberCard(entry) {
@@ -43,7 +46,7 @@ async function sendMemberCard(entry) {
     </html>`
     });
     await transporter.sendMail({
-        from: "osondus444@gmail.com",
+        from: process.env.EMAIL_USER,
         to: entry.email,
         subject: "Welcome To Savvy Squad",
         text: "Thanks for joining! Here's your member card.",
@@ -98,7 +101,7 @@ app.post("/submit", upload.single("media"), (req, res) => {
     submissions.push(newEntry);
     fs.writeFileSync("data.json", JSON.stringify(submissions, null, 2))
     sendMemberCard(newEntry).catch(error => console.log("Email error", error));
-    res.json({ message: "Submission successful" })
+    res.json({ message: "Submission successful! Please check your email for the member card." })
 })
 app.listen(3000, () => {
     console.log("Server running on https://localhost:3000")
