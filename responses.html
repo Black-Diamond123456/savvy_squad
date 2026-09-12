@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savvy Squad- Responses</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background: linear-gradient(180deg, #2d1b4e, #1a1035);
+            color: #fff;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+        }
+
+        .card {
+            background: #fff;
+            color: #2d1b4e;
+            border: 2px solid #e24b4a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card img,
+        .card video {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
+            margin-top: 10px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Savvy Squad Responses</h1>
+    <div id="responseList"></div>
+
+    <script>
+        let entered = prompt("Enter password to view responses:");
+        fetch("/responses?password=" + entered)
+            .then(response => {
+                if (response.status === 401) {
+                    alert("Wrong password")
+                    throw new Error("Unauthorized");
+                }
+                return response.json();
+            })
+            .then(data => {
+                let container = document.getElementById("responseList");
+
+                data.forEach(person => {
+                    let card = document.createElement("div");
+                    card.className = "card";
+                    let mediaHTML = "";
+                    if (person.media) {
+                        mediaHTML = `<img src="/uploads/${person.media}" alt="${person.name}'s upload">`;
+                    }
+                    card.innerHTML = `
+        <h3>${person.name}</h3>
+        <p>Age:${person.age}</p>
+<p>Country:${person.country}</p>
+        <p>Hobby:${person.hobby}</p>          
+        <p>About:${person.something}</p> 
+             ${mediaHTML}
+             `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => console.log(error));
+    </script>
+</body>
+
+</html>

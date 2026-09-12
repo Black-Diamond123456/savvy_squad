@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "express": "^5.2.1",
+    "multer": "^2.3.0",
+    "node-html-to-image": "^6.2.0",
+    "nodemailer": "^10.0.7"
+  }
+}
