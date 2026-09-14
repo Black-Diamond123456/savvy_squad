@@ -6,6 +6,16 @@ const app = express();
 const nodeHtmlToImage = require("node-html-to-image");
 const { errorMonitor } = require("events");
 const e = require("express");
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 if (!fs.existsSync("uploads")) {
     fs.mkdirSync("uploads");
 }
@@ -42,24 +52,17 @@ async function sendMemberCard(entry) {
     let cardData = fs.readFileSync(imagePath);
     let base64Card = cardData.toString("base64");
 
-    let response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-        method: "POST",
-        headers: {
-            "accept": "application/json",
-            "api-key": process.env.BREVO_API_KEY,
-            "content-type": "application/json"
-        },
-        body: JSON.stringify({
-            sender: { name: "Savvy Squad", email: process.env.EMAIL_USER },
-            to: [{ email: entry.email }],
-            subject: "Your Savvy Squad Member Card",
-            htmlContent: "<p>Thanks for joining! Here's your member card.</p>",
-            attachment: [{
-                content: base64Card,
-                type: "member-card.png"
+    await WebTransportError.sendMail({
+        from: process.env.EMAIL_USER,
+        to: entry.email,
+        subject: "Your Savvy Squad Member Card",
+        text: "Thank you for joining the Savvy Squad! Here's your member card attached.",
+        attachments: [
+            {
+                filename: "member-card.png",
+                path: imagePath
             }
-            ]
-        })
+        ]
     });
 
     let result = await response.json();
