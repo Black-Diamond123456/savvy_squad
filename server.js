@@ -96,6 +96,7 @@ app.get("/responses", (req, res) => {
     res.json(submissions);
 });
 app.post("/submit", upload.single("media"), (req, res) => {
+    console.log("Received submission", req.body);
     let submissions = JSON.parse(fs.readFileSync("data.json"));
 
     let newEntry = {
