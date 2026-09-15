@@ -52,7 +52,7 @@ async function sendMemberCard(entry) {
         },
         body: JSON.stringify({
             sender: { name: "Savvy Squad", email: process.env.EMAIL_USER },
-            TP: [{ email: entry.email }],
+            to: [{ email: entry.email }],
             subject: "Your Savvy Squad Member Card",
             htmlContent: "<p>Thanks for joining! Here's your member card.<p>",
             attachment: [{
